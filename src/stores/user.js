@@ -11,24 +11,7 @@ export const useUserStore = defineStore('user', () => {
     gender: '',
     age: null
   })
-  const users = ref([
-    {
-      id: 1,
-      login: 'user01',
-      name: 'User 1',
-      password: 'password',
-      gender: 'male',
-      age: 18
-    },
-    {
-      id: 2,
-      login: 'user02',
-      name: 'User 2',
-      password: 'password',
-      gender: 'female',
-      age: 40
-    }
-  ])
+  const users = ref([])
   let lastId = 3
   const showForm = ref(false)
 
@@ -41,14 +24,23 @@ export const useUserStore = defineStore('user', () => {
       console.log(error)
     }
   }
-  function handleSubmit() {
+  async function handleSubmit() {
     if (form.value.id === -1) {
-      form.value.id = lastId
-      users.value.push({ ...form.value })
-      lastId++
+      try {
+        const res = await axios.post('http://localhost:3000/users', form.value)
+        console.log(res)
+        await getUsers()
+      } catch (error) {
+        console.log(error)
+      }
     } else {
-      const index = users.value.findIndex((item) => item.id === form.value.id)
-      users.value[index] = { ...form.value }
+      try {
+        const res = await axios.patch('http://localhost:3000/users/' + form.value.id, form.value)
+        console.log(res)
+        await getUsers()
+      } catch (error) {
+        console.log(error)
+      }
     }
     clearForm()
   }
@@ -69,8 +61,14 @@ export const useUserStore = defineStore('user', () => {
     showForm.value = false
   }
 
-  function deleteUser(id) {
-    users.value = users.value.filter((item) => item.id !== id)
+  async function deleteUser(id) {
+    try {
+      const res = await axios.delete('http://localhost:3000/users/' + id)
+      console.log(res)
+      await getUsers()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   function editUser(item) {
