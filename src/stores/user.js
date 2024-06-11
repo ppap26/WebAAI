@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useUserStore = defineStore('user', () => {
   const form = ref({
@@ -31,6 +32,15 @@ export const useUserStore = defineStore('user', () => {
   let lastId = 3
   const showForm = ref(false)
 
+  async function getUsers() {
+    try {
+      const res = await axios.get('http://localhost:3000/users')
+      console.log(res)
+      users.value = res.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
   function handleSubmit() {
     if (form.value.id === -1) {
       form.value.id = lastId
@@ -72,5 +82,16 @@ export const useUserStore = defineStore('user', () => {
     showForm.value = true
   }
 
-  return { form, users, showForm, handleSubmit, clearForm, cancel, deleteUser, editUser, addNew }
+  return {
+    form,
+    users,
+    showForm,
+    handleSubmit,
+    clearForm,
+    cancel,
+    deleteUser,
+    editUser,
+    addNew,
+    getUsers
+  }
 })

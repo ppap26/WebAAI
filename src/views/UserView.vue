@@ -1,7 +1,11 @@
 <script setup>
 import { useUserStore } from '../stores/user.js'
 import CurrentLogin from '../components/CurrentLogin.vue'
+import { onMounted } from 'vue'
 const userStore = useUserStore()
+onMounted(() => {
+  userStore.getUsers()
+})
 </script>
 
 <template>
