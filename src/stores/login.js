@@ -1,15 +1,14 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useUserStore } from './user'
 import axios from 'axios'
+import router from '@/router'
 export const useLoginStore = defineStore('login', () => {
-  const userStore = useUserStore()
   const form = ref({
     login: '',
     password: ''
   })
 
-  const currentUser = ref(null)
+  const currentUser = ref(JSON.parse(localStorage.getItem('user')))
   const message = ref('')
   const error = ref('')
   async function handleSubmit() {
@@ -18,7 +17,9 @@ export const useLoginStore = defineStore('login', () => {
       console.log('Login Sucess')
       message.value = 'Login Sucess'
       error.value = ''
-      currentUser.value = res.data
+      currentUser.value = res.data.user
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      localStorage.setItem('token', res.data.access_token)
     } catch (err) {
       console.log('Login Fail!!!')
       error.value = 'Login Fail!!!'
@@ -35,6 +36,9 @@ export const useLoginStore = defineStore('login', () => {
   }
   function logout() {
     currentUser.value = null
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    router.push({ name: 'login' })
   }
   function isLogin() {
     return currentUser.value !== null

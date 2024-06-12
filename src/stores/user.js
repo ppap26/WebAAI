@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
-
+import http from '../services/http'
 export const useUserStore = defineStore('user', () => {
   const form = ref({
     id: -1,
@@ -17,7 +16,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function getUsers() {
     try {
-      const res = await axios.get('http://localhost:3000/users', {
+      const res = await http.get('/users', {
         headers: {
           Authorization:
             'Bearer ' +
@@ -33,7 +32,7 @@ export const useUserStore = defineStore('user', () => {
   async function handleSubmit() {
     if (form.value.id === -1) {
       try {
-        const res = await axios.post('http://localhost:3000/users', form.value, {
+        const res = await http.post('/users', form.value, {
           headers: {
             Authorization:
               'Bearer ' +
@@ -47,7 +46,7 @@ export const useUserStore = defineStore('user', () => {
       }
     } else {
       try {
-        const res = await axios.patch('http://localhost:3000/users/' + form.value.id, form.value, {
+        const res = await http.patch('/users/' + form.value.id, form.value, {
           headers: {
             Authorization:
               'Bearer ' +
@@ -81,7 +80,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function deleteUser(id) {
     try {
-      const res = await axios.delete('http://localhost:3000/users/' + id, {
+      const res = await http.delete('/users/' + id, {
         headers: {
           Authorization:
             'Bearer ' +
