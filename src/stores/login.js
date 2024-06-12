@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
+import axios from 'axios'
 export const useLoginStore = defineStore('login', () => {
   const userStore = useUserStore()
   const form = ref({
@@ -11,20 +12,14 @@ export const useLoginStore = defineStore('login', () => {
   const currentUser = ref(null)
   const message = ref('')
   const error = ref('')
-  function handleSubmit() {
-    const loginUser = userStore.users.find((item) => item.login === form.value.login)
-    if (!loginUser) {
-      console.log('Not found!!!')
-      error.value = 'Not found!!!'
-      message.value = ''
-      return
-    }
-    if (loginUser.password === form.value.password) {
+  async function handleSubmit() {
+    try {
+      const res = await axios.post('http://localhost:3000/auth/login', form.value)
       console.log('Login Sucess')
       message.value = 'Login Sucess'
       error.value = ''
-      currentUser.value = loginUser
-    } else {
+      currentUser.value = res.data
+    } catch (err) {
       console.log('Login Fail!!!')
       error.value = 'Login Fail!!!'
       message.value = ''
