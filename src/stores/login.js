@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import router from '@/router'
+import http from '../services/http'
 export const useLoginStore = defineStore('login', () => {
   const form = ref({
     login: '',
@@ -13,7 +13,7 @@ export const useLoginStore = defineStore('login', () => {
   const error = ref('')
   async function handleSubmit() {
     try {
-      const res = await axios.post('http://localhost:3000/auth/login', form.value)
+      const res = await http.post('/auth/login', form.value)
       console.log('Login Sucess')
       message.value = 'Login Sucess'
       error.value = ''

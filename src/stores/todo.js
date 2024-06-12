@@ -1,23 +1,19 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import http from '../services/http'
-export const useUserStore = defineStore('user', () => {
+export const useTodoStore = defineStore('todo', () => {
   const form = ref({
     id: -1,
-    login: '',
-    name: '',
-    password: '',
-    gender: '',
-    age: null
+    text: ''
   })
-  const users = ref([])
+  const todos = ref([])
   const showForm = ref(false)
 
-  async function getUsers() {
+  async function getTodos() {
     try {
-      const res = await http.get('/users')
+      const res = await http.get('/todos')
       console.log(res)
-      users.value = res.data
+      todos.value = res.data
     } catch (error) {
       console.log(error)
     }
@@ -25,17 +21,17 @@ export const useUserStore = defineStore('user', () => {
   async function handleSubmit() {
     if (form.value.id === -1) {
       try {
-        const res = await http.post('/users', form.value)
+        const res = await http.post('/todos', form.value)
         console.log(res)
-        await getUsers()
+        await getTodos()
       } catch (error) {
         console.log(error)
       }
     } else {
       try {
-        const res = await http.patch('/users/' + form.value.id, form.value)
+        const res = await http.patch('/todos/' + form.value.id, form.value)
         console.log(res)
-        await getUsers()
+        await getTodos()
       } catch (error) {
         console.log(error)
       }
@@ -46,11 +42,7 @@ export const useUserStore = defineStore('user', () => {
   function clearForm() {
     form.value = {
       id: -1,
-      login: '',
-      name: '',
-      password: '',
-      gender: '',
-      age: null
+      text: ''
     }
   }
 
@@ -59,17 +51,17 @@ export const useUserStore = defineStore('user', () => {
     showForm.value = false
   }
 
-  async function deleteUser(id) {
+  async function deleteTodo(id) {
     try {
-      const res = await http.delete('/users/' + id)
+      const res = await http.delete('/todos/' + id)
       console.log(res)
-      await getUsers()
+      await getTodos()
     } catch (error) {
       console.log(error)
     }
   }
 
-  function editUser(item) {
+  function editTodo(item) {
     form.value = { ...item }
     showForm.value = true
   }
@@ -80,14 +72,14 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     form,
-    users,
+    todos,
     showForm,
     handleSubmit,
     clearForm,
     cancel,
-    deleteUser,
-    editUser,
+    deleteTodo,
+    editTodo,
     addNew,
-    getUsers
+    getTodos
   }
 })
