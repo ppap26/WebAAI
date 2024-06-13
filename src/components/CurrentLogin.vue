@@ -7,7 +7,7 @@ const loginStore = useLoginStore()
 <template>
   <div v-if="loginStore.isLogin()">
     <img
-      :src="'http://localhost:3000/uploads/' + loginStore.currentUser.image"
+      :src="'https://fce1-202-28-78-213.ngrok-free.app/uploads/' + loginStore.currentUser.image"
       alt="Profile image"
       style="width: 50px"
     />
