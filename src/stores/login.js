@@ -43,5 +43,16 @@ export const useLoginStore = defineStore('login', () => {
   function isLogin() {
     return currentUser.value !== null
   }
-  return { form, currentUser, message, error, handleSubmit, cancel, logout, isLogin }
+
+  async function updateLogin() {
+    try {
+      const res = await http.get('/users/profile')
+      currentUser.value = res.data
+      localStorage.setItem('user', JSON.stringify(res.data))
+    } catch (err) {
+      console.log('Login Fail!!!')
+    }
+  }
+
+  return { form, currentUser, message, error, handleSubmit, cancel, logout, isLogin, updateLogin }
 })
