@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router from '@/router'
 const instance = axios.create({
-  baseURL: 'https://68e9-202-28-78-213.ngrok-free.app'
+  baseURL: 'https://fce1-202-28-78-213.ngrok-free.app'
 })
 
 // กำหนด interceptor สำหรับการตั้งค่า header
